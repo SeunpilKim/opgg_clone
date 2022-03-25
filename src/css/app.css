@@ -7,3 +7,11 @@ html, body, #root, .page-wrapper {
 .page-wrapper {
   background-color: skyblue;
 }
+
+.page-wrapper .header {
+  width: 100%
+}
+
+.page-wrapper .contents-wrapper {
+  width: 100%
+}

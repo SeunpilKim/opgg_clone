@@ -1,8 +1,8 @@
 import axios from 'axios';
-import { store } from '@redux/store';
-import { startBlockUI, endBlockUI } from '@redux/action-creators/common';
+import { store } from '../redux/store';
+import { startBlockUI, endBlockUI } from '../redux/action-creators/common';
 
-let BASE_URL = '';
+let BASE_URL = 'https://codingtest.op.gg';
 
 const DEFAULT_ACCEPT_TYPE = 'application/json';
 

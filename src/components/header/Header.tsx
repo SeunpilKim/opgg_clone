@@ -1,15 +1,23 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 
 import { getSummoner } from '../../core/api'
 import { Summoner } from '../../core/model'
+import { getRecent, saveRecent } from '../../core/util'
 
-import './Header.css'
+import './Header.styl'
 
-const Header = () => {
+interface HeaderProps {
+  handleSelectSummoner: (name: string) => void
+}
+
+const Header = ({handleSelectSummoner}: HeaderProps) => {
   let searchTimeoutInstance: any = null;
+  const listRef = useRef<any>()
+  const recentRef = useRef<any>()
+
   const [searchValue, setSearchValue] = useState('')
   const [searchItem, setSearchItem] = useState<Summoner | null>(null)
-  const [recentList, setRecentList] = useState([])
+  const [recentList, setRecentList] = useState(getRecent())
 
   const [showList, setShowList] = useState(false)
   const [showRecent, setShowRecent] = useState(false)
@@ -35,8 +43,41 @@ const Header = () => {
       setShowRecent(false)
       setShowList(true)
     } else {
+      setRecentList(getRecent())
       setShowRecent(true)
       setShowList(false)
+    }
+  }
+
+  const handleSelectUser = () => {
+    if (searchItem) {
+      saveRecent(searchItem.name);
+      setShowRecent(false);
+      setShowList(false);
+      setRecentList(getRecent())
+      handleSelectSummoner(searchItem.name)
+    }
+  }
+
+  const handleSelectRecent = (name: string) => {
+    saveRecent(name)
+    setShowRecent(false);
+    setShowList(false);
+    setRecentList(getRecent())
+    handleSelectSummoner(name)
+  }
+
+  const handleClickOutside = (e: { target: any }) => {
+    if (showList) {
+      if (!listRef.current.contains(e.target)) {
+        setShowList(false);
+      }
+    }
+
+    if (showRecent) {
+      if (!recentRef.current.contains(e.target)) {
+        setShowRecent(false);
+      }
     }
   }
 
@@ -50,6 +91,11 @@ const Header = () => {
     }
   }, [searchValue])
 
+  useEffect(() => {
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  })
+
   return (
     <div className='header-wrapper'>
       <div className='input-wrapper'>
@@ -59,7 +105,7 @@ const Header = () => {
           onChange={handleChange}
           placeholder={'소환사명, 챔피언..'}
           onFocus={() => { if (!searchValue) { setShowRecent(true); setShowList(false) } else { setShowRecent(false); setShowList(true) } }}
-          onBlur={() => { setShowRecent(false); setShowList(false) }}
+          // onBlur={() => { setShowRecent(false); setShowList(false) }}
         />
         <div className='icon-wrapper'>
           <span className='icon-text'>
@@ -70,8 +116,8 @@ const Header = () => {
           showList && 
           (
             searchItem ?
-            <div className='search-result'>
-              <div className='search-item'>
+            <div className='search-result' ref={listRef}>
+              <div className='search-item' onClick={handleSelectUser}>
                 <div className='user-icon-wrapper'>
                   <img src={ searchItem.profileImageUrl}/>
                 </div>
@@ -92,8 +138,26 @@ const Header = () => {
         }
         {
           showRecent &&
-          <div className='recent-list'>
-            {'recent List'}
+          <div className='recent-list' ref={recentRef}>
+            <div className='recent-list-nav'>
+              <div className='nav-item active'>
+                {'최근항목'}
+              </div>
+              <div className='nav-item'>
+                {'즐겨찾기'}
+              </div>
+            </div>
+            {
+              recentList.map((item: boolean | React.ReactChild | React.ReactFragment | React.ReactPortal | null | undefined) => {
+                return (
+                  <div className='recent-item' key={`recent-item-${item}`} onClick={ () => {
+                      handleSelectRecent(String(item))
+                    } }>
+                    { item }
+                  </div>
+                )
+              })
+            }
           </div>
         }
       </div>

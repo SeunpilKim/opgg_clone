@@ -1,0 +1,21 @@
+.common-indicator
+  .common-indicator-img
+    width 32px
+    height 32px
+    img
+      animation rotate_image 0.7s linear infinite;transform-origin: 50% 50%;
+    &.small
+      width 16px
+      height 16px
+
+@keyframes rotate_image{
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+
+.MuiCircularProgress-root
+  color $secondary!important
+.MuiLinearProgress-bar
+  background-color $secondary!important

@@ -1,0 +1,184 @@
+.most-pick-wrapper
+  width: 100%
+  margin-bottom: 16px
+  border: 1px solid #cdd2d2
+  background-color: #ededed
+  .nav-bar
+    display: flex
+    padding: 12px 0 0px 16px
+    background-color: #f2f2f2
+    border-bottom: 1px solid #cdd2d2
+    .nav-item
+      font-size: 12px
+      color: #555555
+      margin-right: 24px
+      padding-bottom: 10px
+      cursor: pointer
+      &.active
+        font-weight: bold
+        color: #1f8ecd
+        border-bottom: 2px solid #1f8ecd
+  .most-pick-detail
+    display: flex
+    .section
+      border-right: 1px solid #cdd2d2
+    .summary-wrapper
+      padding: 16px 0 23px 0
+      .game-count
+        font-size: 12px
+        color: #666666
+        padding-left: 33px
+        margin-bottom: 14px
+      .chart-wrapper
+        display: flex
+        padding-left: 24px
+        .chart
+          position: relative
+          width: 90px
+          height: 90px
+          border-radius: 50%
+          .center
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background-color: #ededed
+            position: absolute
+            top: 43%;
+            left: 43%;
+            width: 64px
+            height: 64px
+            border-radius: 50%
+            font-size: 14px
+            font-weight: bold
+            color: #555555
+            transform: translate(-40%, -40%)
+      .number-wrapper
+        padding-top: 17px
+        margin: 0 35px
+        .number-format
+          display:flex
+          width: 92px
+          font-size: 11px
+          justify-content: center
+          align-items: center
+          margin-bottom: 6px
+          .kill, .assist
+            font-weight: bold
+            color: #333333
+          .death
+            font-weight: bold
+            color: #c6443e
+          .slash
+            color: #999999
+            margin: 0 2px
+        .kda-wrapper
+            font-size: 16px
+            color: #5e5e5e
+          .kda
+            font-weight: bold
+          .kda, .kda-unit
+            &.normal
+              color: #2daf7f
+            &.good
+              color: #1f8ecd
+            &.excellent
+              color: #e19205
+          .win-rate
+            margin-left: 2px
+            &.good
+              color: #c6443e
+    .most-champ-wrapper
+      padding: 16px
+      padding-bottom: 0
+      .champ-item
+        display: flex
+        align-items: center
+        margin-bottom: 12px
+        &:last-child
+          margin-bottom: 0
+        .icon-wrapper
+          width: 30px
+          height: 30px
+          min-width: 30px
+          border-radius: 50%
+          overflow: hidden
+          margin-right: 8px
+          img
+            width: 100%
+        .empty-text
+          font-size: 11px
+          color: #999999
+          justify-content: left
+        .info-wrapper
+          .name
+            font-size: 14px
+            color: #333333
+            margin-bottom: 3px
+          .kda-win-rate
+            font-size: 11px
+            .win-rate
+              font-weight: bold
+              color: #333333
+              &.good
+                color: #c6443e
+            .win-rate-unit
+              color: #333333
+              margin-right: 2px
+              &.good
+                color: #c6443e
+            .win-lose
+              color: #555555
+            .divider-line
+              margin: 0 6px
+              color: #cdd2d2
+            .kda
+              font-weight: bold
+              color: #555555
+              &.normal
+                color: #2daf7f
+              &.good
+                color: #1f8ecd
+              &.excellent
+                color: #e19205
+    .position-wrapper
+      padding: 16px 0 10px 16px
+      border-right: none
+      .section-title
+        font-size: 12px
+        color: #666666
+        margin-bottom: 22px
+      .position-item
+        display: flex
+        align-items: center
+        margin-bottom: 24px
+        &:last-child
+          margin-bottom: 0
+        .icon-wrapper
+          width: 28px
+          height: 28px
+          margin-right: 8px
+          img
+            width: 100%
+        .info-wrapper
+          .name
+            font-size: 14px
+            color: #333333
+            margin-bottom: 3px
+          .pick-rate-wrapper
+            font-size: 11px
+            .pick-rate
+              font-weight: bold
+              color: #1f8ecd
+            .pick-rate-unit
+              color: #1f8ecd
+            .divider-line
+              margin: 0 6px
+              color: #cdd2d2
+            .win-rate-unit
+              color: #666666
+            .win-rate
+              color: #333333
+              font-weight: bold
+              margin-left: 2px
+              
+

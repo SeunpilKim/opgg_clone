@@ -112,6 +112,7 @@
       .assist-rate
         color: #d0021b
     .item-info-wrapper
+      margin-right: 11px
       .item-list-wrapper
         display: flex
         width: 96px;
@@ -122,6 +123,7 @@
           width: 22px
           height: 22px
           margin-right: 2px
+          display: flex
           img
             width: 100%
           &.below
@@ -140,6 +142,28 @@
         .control-ward-count
           font-size: 11px
           color: black
-
-
+    .team-member-info
+      &.red
+        margin-right: 13px
+      .player-wrapper
+        display: flex
+        align-items: center
+        width: 71px
+        .champ-icon-wrapper
+          display: flex
+          width: 16px
+          height: 16px
+          margin-right: 3px
+          img
+            width: 100%
+        .user-name
+          font-size: 11px
+          color: #555555
+          min-width: 52px
+          max-width: 52px;
+          overflow: hidden;
+          text-overflow: ellipsis;
+          white-space: nowrap;
+          &.my-name
+            color: black
           

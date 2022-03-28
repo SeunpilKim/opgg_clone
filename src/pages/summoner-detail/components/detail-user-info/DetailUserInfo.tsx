@@ -33,7 +33,14 @@ const DetailUserInfo = ({ data }: detailProps) => {
 
       if (mostInfo.data) {
         // 게임 수 기준으로 정렬 필요
-        setMostChampions(mostInfo.data.champions ? mostInfo.data.champions : [])
+        const mostChampionsArr = mostInfo.data.champions.sort((a: { games: number }, b: { games: number }) => {
+          if (a.games > b.games) return -1; else if (a.games <= b.games) return 1 
+        })
+        setMostChampions(mostChampionsArr)
+
+        const recentChampionArr = mostInfo.data.recentWinRate.sort((a: { wins: number; losses: number },b: { wins: number; losses: number }) => {
+          if ((a.wins + a.losses) > (b.wins + b.losses)) return -1; else if ((a.wins + a.losses) <= (b.wins + b.losses)) return 1
+        })
         setRecentChampions(mostInfo.data.recentWinRate ? mostInfo.data.recentWinRate : [])
       } else {
         setMostChampions([])

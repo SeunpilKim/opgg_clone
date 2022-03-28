@@ -1,6 +1,8 @@
 import React from 'react'
 import moment from 'moment'
 
+import TextTooltip from '../../../../../../components/common-text-tooltip/CommonTextTooltip'
+
 import './MatchItem.styl'
 import buleTeamIcon from '../../../../../../assets/icons/ic-blue-team.png'
 import redTeamIcon from '../../../../../../assets/icons/ic-red-team.png'
@@ -11,7 +13,6 @@ interface props {
 }
 
 const MatchItem = ({data} : props) => {
-  console.log(data)
   const { game, teams } = data
   
   const timeForToday = (value: number) => {
@@ -54,9 +55,13 @@ const MatchItem = ({data} : props) => {
     const result = []
     for (let i = 0; i < 8; ++i) {
       if (game.items[i]) {
-        result.push(<div className={`item-image-wrapper ${i >= 4 ? 'below' : ''}`}key={`${game.gameId}-item-image-${i}`}>
-          <img src={game.items[i].imageUrl} />
-        </div>)
+        result.push(
+          <TextTooltip text={`아이템 ${i}`} key={`${game.gameId}-item-image-${i}`}>
+            <div className={`item-image-wrapper ${i >= 4 ? 'below' : ''}`}>
+              <img src={game.items[i].imageUrl} />
+            </div>
+          </TextTooltip>
+        )
       } else {
         result.push(<div className={`item-image-wrapper empty ${i >= 4 ? 'below' : ''}`} key={`${game.gameId}-item-image-${i}`}>
         </div>)
@@ -132,6 +137,37 @@ const MatchItem = ({data} : props) => {
             </div>
             <span className='control-ward-count'>{`제어와드 ${game.stats.ward.visionWardsBought}`}</span>
           </div>
+        </div>
+        <div className='red team-member-info'>
+          {
+            teams[0].players.map((player: { champion: { imageUrl: string }; summonerId: number, summonerName: string }) => {
+              return <div className='player-wrapper' key={`${player.summonerId}-red-team-${player.summonerName}`}>
+                <div className='champ-icon-wrapper'>
+                  <img src={player.champion.imageUrl} />
+                </div>
+                <div className={`user-name ${game.summonerName === player.summonerName ? 'my-name' : ''}`}>
+                  { player.summonerName }
+                </div>
+              </div>
+            })
+          }
+        </div>
+        <div className='blue team-member-info'>
+        {
+            teams[1].players.map((player: { champion: { imageUrl: string }; summonerId: number, summonerName: string }) => {
+              return <div className='player-wrapper' key={`${player.summonerId}-blue-team-${player.summonerName}`}>
+                <div className='champ-icon-wrapper'>
+                  <img src={player.champion.imageUrl} />
+                </div>
+                <div className={`user-name ${game.summonerName === player.summonerName ? 'my-name' : ''}`}>
+                  { player.summonerName }
+                </div>
+              </div>
+            })
+          }
+        </div>
+
+        <div className='match-detail-btn'>
         </div>
       </div>
     </div>

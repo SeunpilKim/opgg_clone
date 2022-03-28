@@ -35,11 +35,13 @@ const MatchList = ({ userName, data }: props) => {
   return (
     <div className='match-list-wrapper'>
       {
+        details.length !== 0 ?
         details.map((detail: { game: { gameId: string } }) => {
           return (
             <MatchItem data={detail} key={`match-detail-item-${detail.game.gameId}`}/>
           )
-        })
+        }) :
+        <div className='empty-text'>{' 매치 정보가 없습니다. '}</div>
       }
     </div>
   )

@@ -49,6 +49,22 @@ const MostPickInfo = ({totalData, soloData, freeData, handleChangeTab}: props) =
     else if (positionName === 'jng') return '정글'
   }
 
+  const getWinRate = (win: number, lose: number) => {
+    if (win <= 0) {
+      return 0
+    } else {
+      return win / (win + lose)
+    }
+  }
+
+  const getKda = (kill: number, death: number, assist: number) => {
+    if (death <= 0) {
+      return kill + assist
+    } else {
+      return (kill + assist) / death
+    }
+  }
+
   useEffect(() => {
     handleChangeTab(activeNav)
   }, [activeNav])
@@ -69,9 +85,9 @@ const MostPickInfo = ({totalData, soloData, freeData, handleChangeTab}: props) =
               <div className='game-count'>{`${(totalData.summary.wins + totalData.summary.losses)}전 ${totalData.summary.wins}승 ${totalData.summary.losses}패`}</div>
               <div className='chart-wrapper'>
                 <div className='chart' style={{ 
-                  background: `conic-gradient(#1f8ecd ${parseInt(String(totalData.summary.wins / (totalData.summary.wins + totalData.summary.losses) * 100))}%, #ee5a52 ${parseInt(String(totalData.summary.wins / (totalData.summary.wins + totalData.summary.losses) * 100))}%)`
+                  background: `conic-gradient(#1f8ecd ${parseInt(String(getWinRate(totalData.summary.wins, totalData.summary.losses) * 100))}%, #ee5a52 ${parseInt(String(totalData.summary.wins / (totalData.summary.wins + totalData.summary.losses) * 100))}%)`
                 }}>
-                  <span className='center'>{`${parseInt(String(totalData.summary.wins / (totalData.summary.wins + totalData.summary.losses) * 100))}%`}</span>
+                  <span className='center'>{`${parseInt(String(getWinRate(totalData.summary.wins, totalData.summary.losses) * 100))}%`}</span>
                 </div>
                 <div className='number-wrapper'>
                   <div className='number-format'>
@@ -82,12 +98,12 @@ const MostPickInfo = ({totalData, soloData, freeData, handleChangeTab}: props) =
                     <span className='assist'>{ totalData.summary.assists }</span>
                   </div>
                   <div className='kda-wrapper number-format'>
-                    <span className={`kda ${getKdaColor((totalData.summary.kills + totalData.summary.assists) / totalData.summary.deaths)}`}>{
-                      ((totalData.summary.kills + totalData.summary.assists) / totalData.summary.deaths).toFixed(2)
+                    <span className={`kda ${getKdaColor(getKda(totalData.summary.kills, totalData.summary.deaths, totalData.summary.assists))}`}>{
+                      getKda(totalData.summary.kills, totalData.summary.deaths, totalData.summary.assists).toFixed(2)
                     }</span>
-                    <span className={`kda-unit ${getKdaColor((totalData.summary.kills + totalData.summary.assists) / totalData.summary.deaths)}`}>{ ':1' }</span>
-                    <span className={`win-rate ${parseInt(String(totalData.summary.wins / (totalData.summary.wins + totalData.summary.losses) * 100)) >= 60 ? 'good' : '' }`}>{
-                      `(${parseInt(String(totalData.summary.wins / (totalData.summary.wins + totalData.summary.losses) * 100))}%)`
+                    <span className={`kda-unit ${getKdaColor(getKda(totalData.summary.kills, totalData.summary.deaths, totalData.summary.assists))}`}>{ ':1' }</span>
+                    <span className={`win-rate ${parseInt(String(getWinRate(totalData.summary.wins, totalData.summary.losses) * 100)) >= 60 ? 'good' : '' }`}>{
+                      `(${parseInt(String(getWinRate(totalData.summary.wins, totalData.summary.losses) * 100))}%)`
                     }</span>
                   </div>
                 </div>
@@ -103,18 +119,18 @@ const MostPickInfo = ({totalData, soloData, freeData, handleChangeTab}: props) =
                   <div className='info-wrapper'>
                     <div className='name'>{ totalData.champions[0].name }</div>
                     <div className='kda-win-rate'>
-                      <span className={`win-rate ${parseInt(String(totalData.champions[0].wins / (totalData.champions[0].wins + totalData.champions[0].losses) * 100)) >= 60 ? 'good' : ''}`}>
-                        {`${parseInt(String(totalData.champions[0].wins / (totalData.champions[0].wins + totalData.champions[0].losses) * 100))}`}
+                      <span className={`win-rate ${parseInt(String(getWinRate(totalData.champions[0].wins, totalData.champions[0].losses) * 100)) >= 60 ? 'good' : ''}`}>
+                        {`${parseInt(String(getWinRate(totalData.champions[0].wins, totalData.champions[0].losses) * 100))}`}
                       </span>
-                      <span className={`win-rate-unit ${parseInt(String(totalData.champions[0].wins / (totalData.champions[0].wins + totalData.champions[0].losses) * 100)) >= 60 ? 'good' : ''}`}>
+                      <span className={`win-rate-unit ${parseInt(String(getWinRate(totalData.champions[0].wins, totalData.champions[0].losses) * 100)) >= 60 ? 'good' : ''}`}>
                         {'%'}
                       </span>
                       <span className='win-lose'>
                         {`(${totalData.champions[0].wins}승 ${totalData.champions[0].losses}패)`}
                       </span>
                       <span className='divider-line'>{'|'}</span>
-                      <span className={`kda ${getKdaColor((totalData.champions[0].kills + totalData.champions[0].assists) / totalData.champions[0].deaths)}`}>
-                        {`${((totalData.champions[0].kills + totalData.champions[0].assists) / totalData.champions[0].deaths).toFixed(2)} 평점`}
+                      <span className={`kda ${getKdaColor(getKda(totalData.champions[0].kills, totalData.champions[0].deaths , totalData.champions[0].assists))}`}>
+                        {`${getKda(totalData.champions[0].kills, totalData.champions[0].deaths , totalData.champions[0].assists).toFixed(2)} 평점`}
                       </span>
                     </div>
                   </div> 
@@ -137,18 +153,18 @@ const MostPickInfo = ({totalData, soloData, freeData, handleChangeTab}: props) =
                   <div className='info-wrapper'>
                     <div className='name'>{ totalData.champions[1].name }</div>
                     <div className='kda-win-rate'>
-                      <span className={`win-rate ${parseInt(String(totalData.champions[1].wins / (totalData.champions[1].wins + totalData.champions[1].losses) * 100)) >= 60 ? 'good' : ''}`}>
-                        {`${parseInt(String(totalData.champions[1].wins / (totalData.champions[1].wins + totalData.champions[1].losses) * 100))}`}
+                      <span className={`win-rate ${parseInt(String(getWinRate(totalData.champions[1].wins, totalData.champions[1].losses) * 100)) >= 60 ? 'good' : ''}`}>
+                        {`${parseInt(String(getWinRate(totalData.champions[1].wins, totalData.champions[1].losses) * 100))}`}
                       </span>
-                      <span className={`win-rate-unit ${parseInt(String(totalData.champions[1].wins / (totalData.champions[1].wins + totalData.champions[1].losses) * 100)) >= 60 ? 'good' : ''}`}>
+                      <span className={`win-rate-unit ${parseInt(String(getWinRate(totalData.champions[1].wins, totalData.champions[1].losses) * 100)) >= 60 ? 'good' : ''}`}>
                         {'%'}
                       </span>
                       <span className='win-lose'>
                         {`(${totalData.champions[1].wins}승 ${totalData.champions[1].losses}패)`}
                       </span>
                       <span className='divider-line'>{'|'}</span>
-                      <span className={`kda ${getKdaColor((totalData.champions[1].kills + totalData.champions[1].assists) / totalData.champions[1].deaths)}`}>
-                        {`${((totalData.champions[1].kills + totalData.champions[1].assists) / totalData.champions[1].deaths).toFixed(2)} 평점`}
+                      <span className={`kda ${getKdaColor(getKda(totalData.champions[1].kills, totalData.champions[1].deaths, totalData.champions[1].assists))}`}>
+                        {`${(getKda(totalData.champions[1].kills, totalData.champions[1].deaths, totalData.champions[1].assists)).toFixed(2)} 평점`}
                       </span>
                     </div>
                   </div> 
@@ -171,18 +187,18 @@ const MostPickInfo = ({totalData, soloData, freeData, handleChangeTab}: props) =
                   <div className='info-wrapper'>
                     <div className='name'>{ totalData.champions[2].name }</div>
                     <div className='kda-win-rate'>
-                      <span className={`win-rate ${parseInt(String(totalData.champions[2].wins / (totalData.champions[2].wins + totalData.champions[2].losses) * 100)) >= 60 ? 'good' : ''}`}>
-                        {`${parseInt(String(totalData.champions[2].wins / (totalData.champions[2].wins + totalData.champions[2].losses) * 100))}`}
+                      <span className={`win-rate ${parseInt(String(getWinRate(totalData.champions[2].wins, totalData.champions[2].losses) * 100)) >= 60 ? 'good' : ''}`}>
+                        {`${parseInt(String(getWinRate(totalData.champions[2].wins, totalData.champions[2].losses) * 100))}`}
                       </span>
-                      <span className={`win-rate-unit ${parseInt(String(totalData.champions[2].wins / (totalData.champions[2].wins + totalData.champions[2].losses) * 100)) >= 60 ? 'good' : ''}`}>
+                      <span className={`win-rate-unit ${parseInt(String(getWinRate(totalData.champions[2].wins, totalData.champions[2].losses) * 100)) >= 60 ? 'good' : ''}`}>
                         {'%'}
                       </span>
                       <span className='win-lose'>
                         {`(${totalData.champions[2].wins}승 ${totalData.champions[2].losses}패)`}
                       </span>
                       <span className='divider-line'>{'|'}</span>
-                      <span className={`kda ${getKdaColor((totalData.champions[2].kills + totalData.champions[2].assists) / totalData.champions[2].deaths)}`}>
-                        {`${((totalData.champions[2].kills + totalData.champions[2].assists) / totalData.champions[2].deaths).toFixed(2)} 평점`}
+                      <span className={`kda ${getKdaColor(getKda(totalData.champions[2].kills, totalData.champions[2].deaths, totalData.champions[2].assists))}`}>
+                        {`${(getKda(totalData.champions[2].kills, totalData.champions[2].deaths, totalData.champions[2].assists)).toFixed(2)} 평점`}
                       </span>
                     </div>
                   </div> 
@@ -237,9 +253,9 @@ const MostPickInfo = ({totalData, soloData, freeData, handleChangeTab}: props) =
               <div className='game-count'>{`${(soloData.summary.wins + soloData.summary.losses)}전 ${soloData.summary.wins}승 ${soloData.summary.losses}패`}</div>
               <div className='chart-wrapper'>
                 <div className='chart' style={{ 
-                  background: `conic-gradient(#1f8ecd ${parseInt(String(soloData.summary.wins / (soloData.summary.wins + soloData.summary.losses) * 100))}%, #ee5a52 ${parseInt(String(soloData.summary.wins / (soloData.summary.wins + soloData.summary.losses) * 100))}%)`
+                  background: `conic-gradient(#1f8ecd ${parseInt(String(getWinRate(soloData.summary.wins, soloData.summary.losses) * 100))}%, #ee5a52 ${parseInt(String(getWinRate(soloData.summary.wins, soloData.summary.losses) * 100))}%)`
                 }}>
-                  <span className='center'>{`${parseInt(String(soloData.summary.wins / (soloData.summary.wins + soloData.summary.losses) * 100))}%`}</span>
+                  <span className='center'>{`${parseInt(String(getWinRate(soloData.summary.wins, soloData.summary.losses) * 100))}%`}</span>
                 </div>
                 <div className='number-wrapper'>
                   <div className='number-format'>
@@ -250,12 +266,12 @@ const MostPickInfo = ({totalData, soloData, freeData, handleChangeTab}: props) =
                     <span className='assist'>{ soloData.summary.assists }</span>
                   </div>
                   <div className='kda-wrapper number-format'>
-                    <span className={`kda ${getKdaColor((soloData.summary.kills + soloData.summary.assists) / soloData.summary.deaths)}`}>{
-                      ((soloData.summary.kills + soloData.summary.assists) / soloData.summary.deaths).toFixed(2)
+                    <span className={`kda ${getKdaColor(getKda(soloData.summary.kills, soloData.summary.deaths, soloData.summary.assists))}`}>{
+                      (getKda(soloData.summary.kills, soloData.summary.deaths, soloData.summary.assists)).toFixed(2)
                     }</span>
-                    <span className={`kda-unit ${getKdaColor((soloData.summary.kills + soloData.summary.assists) / soloData.summary.deaths)}`}>{ ':1' }</span>
-                    <span className={`win-rate ${parseInt(String(soloData.summary.wins / (soloData.summary.wins + soloData.summary.losses) * 100)) >= 60 ? 'good' : '' }`}>{
-                      `(${parseInt(String(soloData.summary.wins / (soloData.summary.wins + soloData.summary.losses) * 100))}%)`
+                    <span className={`kda-unit ${getKdaColor(getKda(soloData.summary.kills, soloData.summary.deaths, soloData.summary.assists))}`}>{ ':1' }</span>
+                    <span className={`win-rate ${parseInt(String(getWinRate(soloData.summary.wins, soloData.summary.losses) * 100)) >= 60 ? 'good' : '' }`}>{
+                      `(${parseInt(String(getWinRate(soloData.summary.wins, soloData.summary.losses) * 100))}%)`
                     }</span>
                   </div>
                 </div>
@@ -271,18 +287,18 @@ const MostPickInfo = ({totalData, soloData, freeData, handleChangeTab}: props) =
                   <div className='info-wrapper'>
                     <div className='name'>{ soloData.champions[0].name }</div>
                     <div className='kda-win-rate'>
-                      <span className={`win-rate ${parseInt(String(soloData.champions[0].wins / (soloData.champions[0].wins + soloData.champions[0].losses) * 100)) >= 60 ? 'good' : ''}`}>
-                        {`${parseInt(String(soloData.champions[0].wins / (soloData.champions[0].wins + soloData.champions[0].losses) * 100))}`}
+                      <span className={`win-rate ${parseInt(String(getWinRate(soloData.champions[0].wins, soloData.champions[0].losses) * 100)) >= 60 ? 'good' : ''}`}>
+                        {`${parseInt(String(getWinRate(soloData.champions[0].wins, soloData.champions[0].losses) * 100))}`}
                       </span>
-                      <span className={`win-rate-unit ${parseInt(String(soloData.champions[0].wins / (soloData.champions[0].wins + soloData.champions[0].losses) * 100)) >= 60 ? 'good' : ''}`}>
+                      <span className={`win-rate-unit ${parseInt(String(getWinRate(soloData.champions[0].wins, soloData.champions[0].losses) * 100)) >= 60 ? 'good' : ''}`}>
                         {'%'}
                       </span>
                       <span className='win-lose'>
                         {`(${soloData.champions[0].wins}승 ${soloData.champions[0].losses}패)`}
                       </span>
                       <span className='divider-line'>{'|'}</span>
-                      <span className={`kda ${getKdaColor((soloData.champions[0].kills + soloData.champions[0].assists) / soloData.champions[0].deaths)}`}>
-                        {`${((soloData.champions[0].kills + soloData.champions[0].assists) / soloData.champions[0].deaths).toFixed(2)} 평점`}
+                      <span className={`kda ${getKdaColor(getKda(soloData.champions[0].kills, soloData.champions[0].deaths, soloData.champions[0].assists))}`}>
+                        {`${(getKda(soloData.champions[0].kills, soloData.champions[0].deaths, soloData.champions[0].assists)).toFixed(2)} 평점`}
                       </span>
                     </div>
                   </div> 
@@ -305,18 +321,18 @@ const MostPickInfo = ({totalData, soloData, freeData, handleChangeTab}: props) =
                   <div className='info-wrapper'>
                     <div className='name'>{ soloData.champions[1].name }</div>
                     <div className='kda-win-rate'>
-                      <span className={`win-rate ${parseInt(String(soloData.champions[1].wins / (soloData.champions[1].wins + soloData.champions[1].losses) * 100)) >= 60 ? 'good' : ''}`}>
-                        {`${parseInt(String(soloData.champions[1].wins / (soloData.champions[1].wins + soloData.champions[1].losses) * 100))}`}
+                      <span className={`win-rate ${parseInt(String(getWinRate(soloData.champions[1].wins, soloData.champions[1].losses) * 100)) >= 60 ? 'good' : ''}`}>
+                        {`${parseInt(String(getWinRate(soloData.champions[1].wins, soloData.champions[1].losses) * 100))}`}
                       </span>
-                      <span className={`win-rate-unit ${parseInt(String(soloData.champions[1].wins / (soloData.champions[1].wins + soloData.champions[1].losses) * 100)) >= 60 ? 'good' : ''}`}>
+                      <span className={`win-rate-unit ${parseInt(String(getWinRate(soloData.champions[1].wins, soloData.champions[1].losses) * 100)) >= 60 ? 'good' : ''}`}>
                         {'%'}
                       </span>
                       <span className='win-lose'>
                         {`(${soloData.champions[1].wins}승 ${soloData.champions[1].losses}패)`}
                       </span>
                       <span className='divider-line'>{'|'}</span>
-                      <span className={`kda ${getKdaColor((soloData.champions[1].kills + soloData.champions[1].assists) / soloData.champions[1].deaths)}`}>
-                        {`${((soloData.champions[1].kills + soloData.champions[1].assists) / soloData.champions[1].deaths).toFixed(2)} 평점`}
+                      <span className={`kda ${getKdaColor(getKda(soloData.champions[1].kills, soloData.champions[1].deaths, soloData.champions[1].assists))}`}>
+                        {`${(getKda(soloData.champions[1].kills, soloData.champions[1].deaths, soloData.champions[1].assists)).toFixed(2)} 평점`}
                       </span>
                     </div>
                   </div> 
@@ -339,18 +355,18 @@ const MostPickInfo = ({totalData, soloData, freeData, handleChangeTab}: props) =
                   <div className='info-wrapper'>
                     <div className='name'>{ soloData.champions[2].name }</div>
                     <div className='kda-win-rate'>
-                      <span className={`win-rate ${parseInt(String(soloData.champions[2].wins / (soloData.champions[2].wins + soloData.champions[2].losses) * 100)) >= 60 ? 'good' : ''}`}>
-                        {`${parseInt(String(soloData.champions[2].wins / (soloData.champions[2].wins + soloData.champions[2].losses) * 100))}`}
+                      <span className={`win-rate ${parseInt(String(getWinRate(soloData.champions[2].wins, soloData.champions[2].losses) * 100)) >= 60 ? 'good' : ''}`}>
+                        {`${parseInt(String(getWinRate(soloData.champions[2].wins, soloData.champions[2].losses) * 100))}`}
                       </span>
-                      <span className={`win-rate-unit ${parseInt(String(soloData.champions[2].wins / (soloData.champions[2].wins + soloData.champions[2].losses) * 100)) >= 60 ? 'good' : ''}`}>
+                      <span className={`win-rate-unit ${parseInt(String(getWinRate(soloData.champions[2].wins, soloData.champions[2].losses) * 100)) >= 60 ? 'good' : ''}`}>
                         {'%'}
                       </span>
                       <span className='win-lose'>
                         {`(${soloData.champions[2].wins}승 ${soloData.champions[2].losses}패)`}
                       </span>
                       <span className='divider-line'>{'|'}</span>
-                      <span className={`kda ${getKdaColor((soloData.champions[2].kills + soloData.champions[2].assists) / soloData.champions[2].deaths)}`}>
-                        {`${((soloData.champions[2].kills + soloData.champions[2].assists) / soloData.champions[2].deaths).toFixed(2)} 평점`}
+                      <span className={`kda ${getKdaColor(getKda(soloData.champions[2].kills, soloData.champions[2].deaths, soloData.champions[2].losses))}`}>
+                        {`${(getKda(soloData.champions[2].kills, soloData.champions[2].deaths, soloData.champions[2].losses)).toFixed(2)} 평점`}
                       </span>
                     </div>
                   </div> 
@@ -405,9 +421,9 @@ const MostPickInfo = ({totalData, soloData, freeData, handleChangeTab}: props) =
               <div className='game-count'>{`${(freeData.summary.wins + freeData.summary.losses)}전 ${freeData.summary.wins}승 ${freeData.summary.losses}패`}</div>
               <div className='chart-wrapper'>
                 <div className='chart' style={{ 
-                  background: `conic-gradient(#1f8ecd ${parseInt(String(freeData.summary.wins / (freeData.summary.wins + freeData.summary.losses) * 100))}%, #ee5a52 ${parseInt(String(freeData.summary.wins / (freeData.summary.wins + freeData.summary.losses) * 100))}%)`
+                  background: `conic-gradient(#1f8ecd ${parseInt(String(getWinRate(freeData.summary.wins, freeData.summary.losses) * 100))}%, #ee5a52 ${parseInt(String(getWinRate(freeData.summary.wins, freeData.summary.losses) * 100))}%)`
                 }}>
-                  <span className='center'>{`${parseInt(String(freeData.summary.wins / (freeData.summary.wins + freeData.summary.losses) * 100))}%`}</span>
+                  <span className='center'>{`${parseInt(String(getWinRate(freeData.summary.wins, freeData.summary.losses) * 100))}%`}</span>
                 </div>
                 <div className='number-wrapper'>
                   <div className='number-format'>
@@ -418,12 +434,12 @@ const MostPickInfo = ({totalData, soloData, freeData, handleChangeTab}: props) =
                     <span className='assist'>{ freeData.summary.assists }</span>
                   </div>
                   <div className='kda-wrapper number-format'>
-                    <span className={`kda ${getKdaColor((freeData.summary.kills + freeData.summary.assists) / freeData.summary.deaths)}`}>{
-                      ((freeData.summary.kills + freeData.summary.assists) / freeData.summary.deaths).toFixed(2)
+                    <span className={`kda ${getKdaColor(getKda(freeData.summary.kills, freeData.summary.deaths, freeData.summary.assists))}`}>{
+                      (getKda(freeData.summary.kills, freeData.summary.deaths, freeData.summary.assists)).toFixed(2)
                     }</span>
-                    <span className={`kda-unit ${getKdaColor((freeData.summary.kills + freeData.summary.assists) / freeData.summary.deaths)}`}>{ ':1' }</span>
-                    <span className={`win-rate ${parseInt(String(freeData.summary.wins / (freeData.summary.wins + freeData.summary.losses) * 100)) >= 60 ? 'good' : '' }`}>{
-                      `(${parseInt(String(freeData.summary.wins / (freeData.summary.wins + freeData.summary.losses) * 100))}%)`
+                    <span className={`kda-unit ${getKdaColor(getKda(freeData.summary.kills, freeData.summary.deaths, freeData.summary.assists))}`}>{ ':1' }</span>
+                    <span className={`win-rate ${parseInt(String(getWinRate(freeData.summary.wins, freeData.summary.losses) * 100)) >= 60 ? 'good' : '' }`}>{
+                      `(${parseInt(String(getWinRate(freeData.summary.wins, freeData.summary.losses) * 100))}%)`
                     }</span>
                   </div>
                 </div>
@@ -439,18 +455,18 @@ const MostPickInfo = ({totalData, soloData, freeData, handleChangeTab}: props) =
                   <div className='info-wrapper'>
                     <div className='name'>{ freeData.champions[0].name }</div>
                     <div className='kda-win-rate'>
-                      <span className={`win-rate ${parseInt(String(freeData.champions[0].wins / (freeData.champions[0].wins + freeData.champions[0].losses) * 100)) >= 60 ? 'good' : ''}`}>
-                        {`${parseInt(String(freeData.champions[0].wins / (freeData.champions[0].wins + freeData.champions[0].losses) * 100))}`}
+                      <span className={`win-rate ${parseInt(String(getWinRate(freeData.champions[0].wins, freeData.champions[0].losses) * 100)) >= 60 ? 'good' : ''}`}>
+                        {`${parseInt(String(getWinRate(freeData.champions[0].wins, freeData.champions[0].losses) * 100))}`}
                       </span>
-                      <span className={`win-rate-unit ${parseInt(String(freeData.champions[0].wins / (freeData.champions[0].wins + freeData.champions[0].losses) * 100)) >= 60 ? 'good' : ''}`}>
+                      <span className={`win-rate-unit ${parseInt(String(getWinRate(freeData.champions[0].wins, freeData.champions[0].losses) * 100)) >= 60 ? 'good' : ''}`}>
                         {'%'}
                       </span>
                       <span className='win-lose'>
                         {`(${freeData.champions[0].wins}승 ${freeData.champions[0].losses}패)`}
                       </span>
                       <span className='divider-line'>{'|'}</span>
-                      <span className={`kda ${getKdaColor((freeData.champions[0].kills + freeData.champions[0].assists) / freeData.champions[0].deaths)}`}>
-                        {`${((freeData.champions[0].kills + freeData.champions[0].assists) / freeData.champions[0].deaths).toFixed(2)} 평점`}
+                      <span className={`kda ${getKdaColor(getKda(freeData.champions[0].kills, freeData.champions[0].deaths, freeData.champions[0].assists))}`}>
+                        {`${(getKda(freeData.champions[0].kills, freeData.champions[0].deaths, freeData.champions[0].assists)).toFixed(2)} 평점`}
                       </span>
                     </div>
                   </div> 
@@ -473,18 +489,18 @@ const MostPickInfo = ({totalData, soloData, freeData, handleChangeTab}: props) =
                   <div className='info-wrapper'>
                     <div className='name'>{ freeData.champions[1].name }</div>
                     <div className='kda-win-rate'>
-                      <span className={`win-rate ${parseInt(String(freeData.champions[1].wins / (freeData.champions[1].wins + freeData.champions[1].losses) * 100)) >= 60 ? 'good' : ''}`}>
-                        {`${parseInt(String(freeData.champions[1].wins / (freeData.champions[1].wins + freeData.champions[1].losses) * 100))}`}
+                      <span className={`win-rate ${parseInt(String(getWinRate(freeData.champions[1].wins, freeData.champions[1].losses) * 100)) >= 60 ? 'good' : ''}`}>
+                        {`${parseInt(String(getWinRate(freeData.champions[1].wins, freeData.champions[1].losses) * 100))}`}
                       </span>
-                      <span className={`win-rate-unit ${parseInt(String(freeData.champions[1].wins / (freeData.champions[1].wins + freeData.champions[1].losses) * 100)) >= 60 ? 'good' : ''}`}>
+                      <span className={`win-rate-unit ${parseInt(String(getWinRate(freeData.champions[1].wins, freeData.champions[1].losses) * 100)) >= 60 ? 'good' : ''}`}>
                         {'%'}
                       </span>
                       <span className='win-lose'>
                         {`(${freeData.champions[1].wins}승 ${freeData.champions[1].losses}패)`}
                       </span>
                       <span className='divider-line'>{'|'}</span>
-                      <span className={`kda ${getKdaColor((freeData.champions[1].kills + freeData.champions[1].assists) / freeData.champions[1].deaths)}`}>
-                        {`${((freeData.champions[1].kills + freeData.champions[1].assists) / freeData.champions[1].deaths).toFixed(2)} 평점`}
+                      <span className={`kda ${getKdaColor(getKda(freeData.champions[1].kills, freeData.champions[1].deaths, freeData.champions[1].assists))}`}>
+                        {`${(getKda(freeData.champions[1].kills, freeData.champions[1].deaths, freeData.champions[1].assists)).toFixed(2)} 평점`}
                       </span>
                     </div>
                   </div> 
@@ -507,18 +523,18 @@ const MostPickInfo = ({totalData, soloData, freeData, handleChangeTab}: props) =
                   <div className='info-wrapper'>
                     <div className='name'>{ freeData.champions[2].name }</div>
                     <div className='kda-win-rate'>
-                      <span className={`win-rate ${parseInt(String(freeData.champions[2].wins / (freeData.champions[2].wins + freeData.champions[2].losses) * 100)) >= 60 ? 'good' : ''}`}>
-                        {`${parseInt(String(freeData.champions[2].wins / (freeData.champions[2].wins + freeData.champions[2].losses) * 100))}`}
+                      <span className={`win-rate ${parseInt(String(getWinRate(freeData.champions[2].wins, freeData.champions[2].losses) * 100)) >= 60 ? 'good' : ''}`}>
+                        {`${parseInt(String(getWinRate(freeData.champions[2].wins, freeData.champions[2].losses) * 100))}`}
                       </span>
-                      <span className={`win-rate-unit ${parseInt(String(freeData.champions[2].wins / (freeData.champions[2].wins + freeData.champions[2].losses) * 100)) >= 60 ? 'good' : ''}`}>
+                      <span className={`win-rate-unit ${parseInt(String(getWinRate(freeData.champions[2].wins, freeData.champions[2].losses) * 100)) >= 60 ? 'good' : ''}`}>
                         {'%'}
                       </span>
                       <span className='win-lose'>
                         {`(${freeData.champions[2].wins}승 ${freeData.champions[2].losses}패)`}
                       </span>
                       <span className='divider-line'>{'|'}</span>
-                      <span className={`kda ${getKdaColor((freeData.champions[2].kills + freeData.champions[2].assists) / freeData.champions[2].deaths)}`}>
-                        {`${((freeData.champions[2].kills + freeData.champions[2].assists) / freeData.champions[2].deaths).toFixed(2)} 평점`}
+                      <span className={`kda ${getKdaColor(getKda(freeData.champions[2].kills, freeData.champions[2].deaths, freeData.champions[2].assists))}`}>
+                        {`${(getKda(freeData.champions[2].kills, freeData.champions[2].deaths, freeData.champions[2].assists)).toFixed(2)} 평점`}
                       </span>
                     </div>
                   </div> 

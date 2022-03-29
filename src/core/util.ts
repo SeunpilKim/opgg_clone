@@ -21,3 +21,31 @@ export const getRecent = () => {
     return []
   }
 }
+
+export const getKdaColor = (kda: number) => {
+  if (kda >= 3 && kda < 4) {
+    return 'normal'
+  } else if (kda >= 4 && kda < 5) {
+    return 'good'
+  } else if (kda >= 5) {
+    return 'excellent'
+  } else {
+    return ''
+  }
+}
+
+export const getWinRate = (win: number, lose: number) => {
+  if (win <= 0) {
+    return 0
+  } else {
+    return win / (win + lose)
+  }
+}
+
+export const getKda = (kill: number, death: number, assist: number) => {
+  if (death <= 0) {
+    return kill + assist
+  } else {
+    return (kill + assist) / death
+  }
+}

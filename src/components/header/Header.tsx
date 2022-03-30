@@ -87,7 +87,7 @@ const Header = ({handleSelectSummoner}: HeaderProps) => {
       if (searchTimeoutInstance) searchTimeoutInstance = null
       searchTimeoutInstance = setTimeout(() => {
         handleSearchResult()
-      }, 500)
+      }, 100)
     }
   }, [searchValue])
 
@@ -132,7 +132,7 @@ const Header = ({handleSelectSummoner}: HeaderProps) => {
               </div>
             </div> :
             <div className='search-result'>
-              {'No Item'}
+              {'검색 결과 없음'}
             </div>
           )
         }

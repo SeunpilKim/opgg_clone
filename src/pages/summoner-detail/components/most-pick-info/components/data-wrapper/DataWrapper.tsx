@@ -13,9 +13,10 @@ import MostChampWrapper from '../most-champ-wrapper/MostChampWrapper'
 interface props {
   data: MatchData
   type: string
+  totalGames: number
 }
 
-const DataWrapper = ({data, type}: props) => {
+const DataWrapper = ({data, type, totalGames}: props) => {
 
   const getMostPositionImage = (position: string) => {
     const positionName = position.toLowerCase()
@@ -41,6 +42,11 @@ const DataWrapper = ({data, type}: props) => {
       componentsArr.push(<MostChampWrapper data={data.champions[i]} key={`most-pick-champ-item-${type}-${i}`}/>)
     }
     return componentsArr
+  }
+
+  const getPickRate = (position: number, total: number) => {
+    if (position <= 0) return 0
+    return position / total
   }
 
   return (
@@ -90,11 +96,11 @@ const DataWrapper = ({data, type}: props) => {
                 <div className='info-wrapper'>
                   <div className='name'>{ getMostPositionName(position.position) }</div>
                   <div className='pick-rate-wrapper'>
-                    <span className='pick-rate'>{ parseInt(String(position.games / data.games.length * 100)) }</span>
+                    <span className='pick-rate'>{ parseInt(String(getPickRate(position.games, totalGames) * 100)) }</span>
                     <span className='pick-rate-unit'>{'%'}</span>
                     <span className='divider-line'>{'|'}</span>
                     <span className='win-rate-unit'>{'승률'}</span>
-                    <span className='win-rate'>{ parseInt(String(position.wins / position.games * 100)) }</span>
+                    <span className='win-rate'>{ parseInt(String(getWinRate(position.wins, position.losses) * 100)) }</span>
                     <span className='win-rate-unit'>{'%'}</span>
                   </div>
                 </div>

@@ -14,6 +14,11 @@ interface props {
 const MostPickInfo = ({totalData, soloData, freeData, handleChangeTab}: props) => {
   const [activeNav, setActiveNav] = useState<'total' | 'solo' | 'free'>('total')
 
+  const getRankGamesCount = () => {
+    if (!totalData) return 0
+    return totalData.games.length
+  }
+
   useEffect(() => {
     handleChangeTab(activeNav)
   }, [activeNav])
@@ -29,7 +34,7 @@ const MostPickInfo = ({totalData, soloData, freeData, handleChangeTab}: props) =
         activeNav === 'total' &&
         (
           totalData ?
-          <DataWrapper data={totalData} type={'total'} />:
+          <DataWrapper data={totalData} type={'total'} totalGames={getRankGamesCount()} />:
           <div className='empty-data'>
             {'정보가 없습니다.'}
           </div>
@@ -39,7 +44,7 @@ const MostPickInfo = ({totalData, soloData, freeData, handleChangeTab}: props) =
         activeNav === 'solo' &&
         (
           soloData ?
-          <DataWrapper data={soloData} type={'solo'} /> :
+          <DataWrapper data={soloData} type={'solo'} totalGames={getRankGamesCount()} /> :
           <div className='empty-data'>
             {'정보가 없습니다.'}
           </div>
@@ -49,7 +54,7 @@ const MostPickInfo = ({totalData, soloData, freeData, handleChangeTab}: props) =
         activeNav === 'free' &&
         (
           freeData ?
-          <DataWrapper data={freeData} type={'free'} />  :
+          <DataWrapper data={freeData} type={'free'} totalGames={getRankGamesCount()} />  :
           <div className='empty-data'>
             {'정보가 없습니다.'}
           </div>

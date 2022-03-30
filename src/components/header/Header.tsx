@@ -132,7 +132,9 @@ const Header = ({handleSelectSummoner}: HeaderProps) => {
               </div>
             </div> :
             <div className='search-result'>
-              {'검색 결과 없음'}
+              <div className='empty-text'>
+                {'검색 결과 없음'}
+              </div>
             </div>
           )
         }
